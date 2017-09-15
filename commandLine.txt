@@ -1,0 +1,223 @@
+/* These are MY notes to help me remember and find terminal commands.
+ * This is generally limited to commands I use/expect to use.
+ * There isn't much explanation, except for where I feel I need it. Most of this is to jog my memory.
+ * Anyone is free to use this. 
+ * If you'd like to help improve this, let me know, and I can add you as a collaborator.
+ */
+ 
+ G E N E R A L   /   F I L E   M A N A G E M E N T 
+
+cd 
+pwd
+ls -a
+mkdir
+touch
+> // file creation (same as touch?)
+rm -r -f -i
+rmdir
+mv
+cp
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+G I T
+
+git diff
+git log
+git log -p <filename>
+git commit -am 'message' // add and commit
+git reset --hard // rever everything to last commit
+git fetch // fetch latest changes from 'origin'
+git branch <branch>
+git checkout <branch>
+//above line can be shorthanded as below
+git checkout -b <branch>
+
+git checkout master
+git merge <branch>
+git branch -d <branch>
+// above 3 lines merge branch into master, then deletes branch
+
+git rm --cached .env // removes .env from git cache
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+N O D E
+
+npm install -g http-server
+npm install package@123 --save // install a specific version of npm (versus the latest)
+
+// do this for each project
+// start in folder where your app is
+npm init // initialize (you'll be prompted)
+npm init -y // initialize and accept all defaults
+
+http-server -p 8080 // run from folder where you want to host
+
+
+node --inspect server.js // run server.js in debug mode
+
+node <file.js> // file to run in the console
+nodemon <file.js>
+nodemon --delay 1 <file.js>
+
+CTRL+C // end server
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+E X P R E S S
+
+// start in your app folder
+npm install express --save // do this per project
+
+in express res.status().json() ... NOT res.json().status()
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+???????
+
+export DATABASE='YOUR-CONNECTION-STRING' // export env var
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+O T H E R   P A C K A G E S
+
+npm install body-parser --save
+npm install cookie-parser --save
+npm install eslint --global
+npm install morgan --save // for logging
+npm install dotenv --save // for use with postgresQL????
+npm install treeize
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+C U R L
+
+curl 'url/thru/route/params'
+curl 'url/thru/query/string'
+
+curl -X POST -H "Content-type:application/json" -d '{"make":"kia", "model":"soul}' localhost:8080 // object mapped to key/val from message body
+
+curl -H "Accept:text/plain" localhost:8080
+
+curl --cookie "token=lkjlkjlkjlkj" localhost:8080
+
+man curl // manual for curl
+
+curl <url> // loads page into terminal
+curl <url> | tidy -i // loads page into terminal prettified, in html
+curl <url> | json_pp // loads response (not html)
+curl <url> | pbcopy // loads page into clipboard
+curl <url> >> ~/<filename>.txt // loads page into a file
+culr <url> | grep "sometext" // finds any line containing "sometext"
+
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@
+
+M O C H A   &   C H A I
+
+npm install --save-dev mocha // install mocha for development, not deployment. Save in package.json
+
+npm install --save-dev chai
+npm install --save-dev chai-http
+
+npm install mocha chai chai-http --save-dev // DO THEM ALL!!
+
+npm test
+
+// after installing mocha, edit the package.json as follows:
+  "scripts": {
+    "test": "mocha --watch --colors" // watch for changes; add color for better readability
+  },
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+H E R O K U
+
+https://devcenter.heroku.com/articles/heroku-cli
+https://courses.thinkful.com/node-001v5/project/1.3.5
+
+brew install heroku/brew/heroku
+
+npm install -g heroku-cli // I think we don't need to do this if we install via homebrew
+
+// The Heroku CLI will automatically keep itself and its plugins (except linked plugins) up to date unless you’re using the npm install method or debian/ubuntu package.
+
+heroku --v
+heroku --version
+which heroku // or where heroku
+
+heroku login // then enter heroku credentials
+cd <folder where your app is>
+heroku create // to create a heroku for your app
+git push heroku master
+heroku ps:scale web=1
+heroku open
+
+heroku run // run a one-off-dyno
+heroku logs --tail // in a separate terminal, stream app logs
+heroku config:set VAR_NAME=value // If your app uses environment variables (for example, a DB_USER and DB_PASS in the configuration), you can set the Heroku environment variables.  Good for things that you don't want published to GitHub (like API keys).
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+P O S T G R E S Q L
+
+pg_ctl status
+pg_ctl start -l [dbname]
+
+psql -U <role> [dname] // to enter terminal command prompt for this database (type SQL)
+
+createdb [connection-option] [option] [dbname] [description]
+createdb -U dev [dbname] // option sets the user who runs the command as the owner
+pg_dump // backs up
+psql // restores dump file
+psql -U dev -f ~/[path to back up] [dbname]
+
+pgsql [dbname] < ~/[filename to import]
+pgsql -U dev -d [dbname] < ~/[filename to import]
+dropdb [dbname]
+psql -h [hostname] -U [username] [dbname]
+
+\q //quit
+\c // connect to other
+\l // list
+\dt+ // list public tables with size & description columns
+\dt // list public tables
+\d list all tables in current database
+
+mydb=# super=user
+mydb  ?
+mydb  ? missed slide - go back...
+
+psql -U -dev -d <db> -f query.sql // run <db> as dev, run the file query.sql
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+S Q L
+
+INSERT INTO [table] (field, field, field) VALUES (value, value value);
+SELECT * from [table];
+SELECT [field, field] FROM [table];
+SELECT DISTINCT [field] FROM [table]; // basically value list from field
+SELECT [field] FROM [table] WHERE [field] = [value];
+SELECT [field] FROM [table] WHERE [field] = [value] AND [field] = [value] ORDER BY [field] [DESC/ASC];
+SELECT [field] FROM [table] WHERE [field] = [value] LIMIT 3;
+SELECT max([field]) FROM [TABLE]; // max, min, avg
+SELECT count(*) FROM [table];
+UPDATE [table] SET [field] = [value] WHERE [field] = [value];
+DELETE FROM [table] WHERE [field] = [value];
+DELETE FROM [table]; // deletes all rows from this table
+
+[id_foreign] integer REFERENCES [table]
+
+SELECT [table.field, ...] FROM [table] INNER JOIN [other table] ON [table.field = table.field] WHERE [table.field] = [value]
+SELECT [table.field, ...] FROM [table] LEFT OUTER JOIN [other table] ON [table.field = table.field] WHERE [table.field] = [value]
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+S A S S
+
+sudo gem install -n /usr/local/bin sass
+echo $PATH
+export PATH=$PATH:/usr/local/bin/sass
