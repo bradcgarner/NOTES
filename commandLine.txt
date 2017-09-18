@@ -18,6 +18,8 @@ rmdir
 mv
 cp
 
+sudo // superuser do... allow users to run with priv of another user
+
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 G I T
@@ -57,6 +59,8 @@ http-server -p 8080 // run from folder where you want to host
 
 node --inspect server.js // run server.js in debug mode
 
+node // start a node repl
+
 node <file.js> // file to run in the console
 nodemon <file.js>
 nodemon --delay 1 <file.js>
@@ -89,6 +93,9 @@ npm install morgan --save // for logging
 npm install dotenv --save // for use with postgresQL????
 npm install treeize
 
+brew doctor
+brew update
+brew install mongo
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -221,3 +228,61 @@ S A S S
 sudo gem install -n /usr/local/bin sass
 echo $PATH
 export PATH=$PATH:/usr/local/bin/sass
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+brew services start mongodb
+
+sudo mkdir -p /data/db // create the default database directory 
+sudo chown $USER /data/db //  give your user permission to access default db directory
+
+mongod // short for mongo daemon to start mongo db hosting
+mongod --log(s?) // optional
+CTRL + C // end mongo db hosting (host in 1 terminal, then work in another)
+
+mongo --version
+
+mongo // enter mongo terminal session
+quit() // exit mongo terminal session
+
+mongoimport --db tempTestDb --collection restaurants --drop --file ~/<path-to-unzipped-data-file>
+mongoimport --db [dbname] --collection [collection] --drop --file // --drop says drop the existing collection with the same name if any exists
+
+~ ~ ~ ~ ~ ~ ~ ~ INSIDE MONGO SHELL ~ ~ ~ ~ ~ ~ ~ ~ 
+
+....... non-JS-style commands ........
+show dbs // show databases
+show collections // show 'tables'
+
+use [dbname] // make [dbname] current
+db // show current db
+
+....... JS-style commands ........
+db.dropDatabase() // delete a database.
+db.getCollectionNames() // view the names of collections in database
+db.[collection].findOne()
+
+db.people.find();
+db.people.find({});
+
+Need to understand the id return, id: 0, id 1, unspecified
+db.people.update({ // updates fields in record
+	_id:joeId
+	},
+	{
+		$set: {
+		job: "job",
+		specialty: "specialty"
+	}
+});
+db.people.update({ // replaces entire record
+	_id:joeId
+	},
+	{
+		job: "job",
+		specialty: "specialty"
+	}
+});
+
+.pretty()
+

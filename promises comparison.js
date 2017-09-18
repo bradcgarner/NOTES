@@ -5,19 +5,26 @@
  * If you'd like to help improve this, let me know, and I can add you as a collaborator.
  */
 
+'use strict';
+/* global knex app $*/
+
 // ################ NOT A PROMISE - A CALLBACK! #####################
 
-$.getJSON(endpoint, query, callback);
+const getJsonCallback = function() {
 
-let endpoint = '...with route parameters... not query parameters';
-let query = 'object with query parameters';
-let callback = 'function to run after $.getJSON completes';
-// this can result in 'callback hell' if you have many
-// this ONLY uses http method GET and only returns JSON
-// (versus fetch which can use http methods GET, POST, PUT, DELETE)
-
-// variation that returns a promise
-return $.getJSON(endpoint,query).then('...callback function...');
+  $.getJSON(endpoint, query, callback);
+  
+  let endpoint = '...with route parameters... not query parameters';
+  let query = 'object with query parameters';
+  let callback = 'function to run after $.getJSON completes';
+  // this can result in 'callback hell' if you have many
+  // this ONLY uses http method GET and only returns JSON
+  // (versus fetch which can use http methods GET, POST, PUT, DELETE)
+  
+  // variation that returns a promise
+  return $.getJSON(endpoint,query).then('...callback function...');
+  
+};
 
 
 // ################# NEW PROMISE USE CASE ####################
@@ -64,39 +71,109 @@ init = {
 // NEEDS UPDATING!!!!!!!!!
 
 // simplest version. Just insert.
-app.post('/restaurants', (req, res)=> {
-  knex('restaurants')
-    .insert({name: req.body.name, cuisine: req.body.cusine, borough: req.body.borough})
-    .then(()=>{ }); // we need to end with a then; nothing else to do (though we likely WANT to do something else)
-});
+const knex1 = function() {
+  app.post('/restaurants', (req, res)=> {
+    knex('restaurants')
+      .insert({name: req.body.name, cuisine: req.body.cusine, borough: req.body.borough})
+      .then(()=>{ }); // we need to end with a then; nothing else to do (though we likely WANT to do something else)
+  });
+  
+  // more likely simple version
+  app.post('/restaurants', (req, res)=> {
+    knex('restaurants')
+      .insert({name: req.body.name, cuisine: req.body.cusine, borough: req.body.borough})
+      .returning('id') // critical to use the id below
+      .then( id => res.location(`http://localhost:8080/restaurants/${resId}`).sendStatus(201).send()); // location (headers) must be before sendStatus, send must be last
+  });
+  
+  // nested version / dehydrating
+  app.post('/restaurants', (req, res)=> {
+    let resId;
+    knex('restaurants')
+      .insert({name: req.body.name, cuisine: req.body.cusine, borough: req.body.borough})
+      .returning('id') // critical to use the id below
+      .then(id=>{ // critical to pass in id from above
+        resId = parseInt(id[0]); // critical to avoid re-re-re-passing the id, so we can use it in the next then (or anywhere else in this function)
+        let promiseArr = req.body.grades.map(item=>{
+          return knex('grades') // return is critical since we use {}; map mutates based on what is returned
+            .insert({
+              grade: item.grade,
+              score: item.score,
+              restaurant_id: resId,
+              date: new Date,
+            })
+            .then(()=>{ }); // we only need to end each promise (in the array); nothing else to do
+        });
+        return Promise.all(promiseArr); // our .then() returns a Promise.all; this assures that all parts of this then execute before the next then
+      })
+      .then( id => res.location(`http://localhost:8080/restaurants/${resId}`).sendStatus(201).send()); // location (headers) must be before sendStatus, send must be last
+  });
+  
+};
 
-// more likely simple version
-app.post('/restaurants', (req, res)=> {
-  knex('restaurants')
-    .insert({name: req.body.name, cuisine: req.body.cusine, borough: req.body.borough})
-    .returning('id') // critical to use the id below
-    .then( id => res.location(`http://localhost:8080/restaurants/${resId}`).sendStatus(201).send()); // location (headers) must be before sendStatus, send must be last
-});
+const knex2 = function() {
+  app.post('/restaurants', (req, res)=> {
+    let resId;
+    knex('restaurants')
+      .insert({name: req.body.name, cuisine: req.body.cusine, borough: req.body.borough})
+      .returning('id') // critical to use the id below
+      .then(id=>{ // critical to pass in id from above
+        resId = parseInt(id[0]); // critical to avoid re-re-re-passing the id, so we can use it in the next then (or anywhere else in this function)
+        let promiseArr = req.body.grades.map(item=>{
+          return knex('grades') // return is critical since we use {}; map mutates based on what is returned
+            .insert({
+              grade: item.grade,
+              score: item.score,
+              restaurant_id: resId,
+              date: new Date,
+            })
+            .then(()=>{ }); // we only need to end each promise (in the array); nothing else to do
+        });
+        return Promise.all(promiseArr); // our .then() returns a Promise.all; this assures that all parts of this then execute before the next then
+      })
+      .then( id => res.location(`http://localhost:8080/restaurants/${resId}`).sendStatus(201).send()); // location (headers) must be before sendStatus, send must be last
+  });
+};
 
-// nested version / dehydrating
-app.post('/restaurants', (req, res)=> {
-  let resId;
-  knex('restaurants')
-    .insert({name: req.body.name, cuisine: req.body.cusine, borough: req.body.borough})
-    .returning('id') // critical to use the id below
-    .then(id=>{ // critical to pass in id from above
-      resId = parseInt(id[0]); // critical to avoid re-re-re-passing the id, so we can use it in the next then (or anywhere else in this function)
-      let promiseArr = req.body.grades.map(item=>{
-        return knex('grades') // return is critical since we use {}; map mutates based on what is returned
-          .insert({
-            grade: item.grade,
-            score: item.score,
-            restaurant_id: resId,
-            date: new Date,
-          })
-          .then(()=>{ }); // we only need to end each promise (in the array); nothing else to do
+const knex3 = function() {
+  app.put('/api/stories/:id', (req, res) => {
+    let id = req.params.id;
+    knex('news')
+      .update({
+        title: req.body.title, // if req.body.title is undefined, this line is skipped
+        url: req.body.url
+      })
+      .where('id', req.params.id)
+      .then(() => {
+        if (req.body.votes === 1) {
+          console.log('logging votes',req.body.votes);
+          return knex('news') // return on this line returns a promise
+            .increment('votes')
+            .where('id', req.params.id);
+          // .then(()=>{}); // a then does no good here. The .then() says this promise is over and we start something else. But in this case, the next .then() is 7 lines down, and we need to return a promise.
+        } else if (req.body.votes === -1) {
+          return knex('news')
+            .increment('votes' -1)
+            .where('id', req.params.id);
+        }
+      }) // each .then() needs to return a promise if the following .then() is to run after it finishes
+      .then(() => { // delete all tags for this story
+        console.log('logging id',id);
+        return knex('news_tags')
+          .where('id_news', id)
+          .del();
+      })
+      .then(()=>{
+        const arrayOfPromises = req.body.tags.map(tag => {
+          return knex('news_tags')
+            .insert({id_news: id, id_tags: tag});
+        });
+        return Promise.all(arrayOfPromises);
+      })
+      .then(()=>{
+        res.sendStatus(204);
       });
-      return Promise.all(promiseArr); // our .then() returns a Promise.all; this assures that all parts of this then execute before the next then
-    })
-    .then( id => res.location(`http://localhost:8080/restaurants/${resId}`).sendStatus(201).send()); // location (headers) must be before sendStatus, send must be last
-});
+  });
+};
+
+
