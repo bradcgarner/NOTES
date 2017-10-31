@@ -1,0 +1,28 @@
+H E R O K U
+
+https://devcenter.heroku.com/articles/heroku-cli
+https://courses.thinkful.com/node-001v5/project/1.3.5
+
+brew install heroku/brew/heroku
+
+npm install -g heroku-cli // I think we don't need to do this if we install via homebrew
+
+// The Heroku CLI will automatically keep itself and its plugins (except linked plugins) up to date unless you’re using the npm install method or debian/ubuntu package.
+
+heroku --v
+heroku --version
+which heroku // or where heroku
+
+heroku login // then enter heroku credentials
+cd <folder where your app is>
+heroku create // to create a heroku for your app
+git push heroku master
+heroku ps:scale web=1
+heroku open
+
+heroku run // run a one-off-dyno
+heroku logs --tail // in a separate terminal, stream app logs
+heroku config:set VAR_NAME=value // If your app uses environment variables (for example, a DB_USER and DB_PASS in the configuration), you can set the Heroku environment variables.  Good for things that you don't want published to GitHub (like API keys).
+
+heroku restart
+heroku login

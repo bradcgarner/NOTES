@@ -1,0 +1,7 @@
+R  E  A  C  T
+
+npm install -g create-react-app // installs build system?
+create-react-app <appName> // inside folder; will create a folder with your app name
+npm run start // inside <appName> folder, opens app
+
+npm install --save-dev enzyme react-test-renderer

@@ -1,0 +1,22 @@
+G I T
+
+git diff
+git log
+git log -p <filename>
+git commit -am 'message' // add and commit
+git reset --hard // rever everything to last commit
+git fetch // fetch latest changes from 'origin'
+git branch <branch>
+git checkout <branch>
+//above line can be shorthanded as below
+git checkout -b <branch>
+
+git checkout master
+git merge <branch>
+git branch -d <branch>
+// above 3 lines merge branch into master, then deletes branch
+
+rm -rf .git // didn't seem to work...
+git rm --cached .env // removes .env from git cache
+
+git remote add origin https://github.com/<user>/<repo>.git

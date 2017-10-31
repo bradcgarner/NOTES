@@ -1,0 +1,15 @@
+M O C H A   &   C H A I
+
+npm install --save-dev mocha // install mocha for development, not deployment. Save in package.json
+
+npm install --save-dev chai
+npm install --save-dev chai-http
+
+npm install mocha chai chai-http --save-dev // DO THEM ALL!!
+
+npm test
+
+// after installing mocha, edit the package.json as follows:
+  "scripts": {
+    "test": "mocha --watch --colors" // watch for changes; add color for better readability
+  },

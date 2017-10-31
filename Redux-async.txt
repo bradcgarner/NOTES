@@ -1,0 +1,134 @@
+INDEX
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {Provider} from 'react-redux';
+import CharacterSearch from './components/character-search';
+import store from './store';
+import './index.css';
+
+ReactDOM.render(
+    <Provider store={store}>
+        <CharacterSearch />
+    </Provider>,
+    document.getElementById('root')
+);
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+STORE
+
+import {createStore, applyMiddleware} from 'redux';
+import thunk from 'redux-thunk';
+import {characterReducer} from './reducers';
+
+export default createStore(
+    characterReducer,
+    applyMiddleware(thunk)
+);
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+ACTION
+
+// This function will make an AJAX request to the Star Wars API
+// It will randomly fail for 25% of requests, and has a 0.5s delay artifically
+// inserted so you can check your loading state
+import {search} from './star-wars';
+//import thunk from 'redux-thunk';
+
+export const SEARCH_CHARACTERS_REQUEST = 'SEARCH_CHARACTERS_REQUEST';
+export const searchCharactersRequest = () => ({
+    type: SEARCH_CHARACTERS_REQUEST
+});
+
+export const SEARCH_CHARACTERS_SUCCESS = 'SEARCH_CHARACTERS_SUCCESS';
+export const searchCharactersSuccess = characters => ({
+    type: SEARCH_CHARACTERS_SUCCESS,
+    characters
+});
+
+export const SEARCH_CHARACTERS_ERROR = 'SEARCH_CHARACTERS_ERROR';
+export const searchCharactersError = error => ({
+    type: SEARCH_CHARACTERS_ERROR,
+    error
+});
+
+export const searchCharacters = name => dispatch => {
+  dispatch(searchCharactersRequest()); // just update state that we are searching
+  return search(name) // this will return a string if fails, or array if successful
+    .then(res => dispatch(searchCharactersSuccess(res)))
+    .catch(err => dispatch(searchCharactersError(err)));
+  
+  
+  // Make this async action using the search function
+    // It should dispatch the three sync actions above
+};
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+HELPER ACTION
+
+function _search(name) {
+    if (Math.random() < 0.25) {
+        return Promise.reject('Something went wrong');
+    }
+
+    return fetch(`https://swapi.co/api/people/?search=${name}`)
+      .then(res => {
+        if (!res.ok) {
+            return Promise.reject(res.statusText);
+        }
+        return res.json();
+      })
+      .then(data => data.results.map(character => character.name));
+      // return array of character names
+}
+
+export function search(name) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => resolve(_search(name)), 500);
+    });
+}
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+REDUCER 
+
+import {
+    SEARCH_CHARACTERS_REQUEST,
+    SEARCH_CHARACTERS_SUCCESS,
+    SEARCH_CHARACTERS_ERROR
+} from './actions';
+
+const initialState = {
+    characters: [],
+    loading: false,
+    error: null
+};
+
+export function characterReducer(state=initialState, action) {
+    if (action.type === SEARCH_CHARACTERS_REQUEST) {
+        return Object.assign({}, state, {
+          loading: true,
+          error: null
+        })
+    }
+    else if (action.type === SEARCH_CHARACTERS_SUCCESS) {
+        return Object.assign({}, state, {
+          loading: false,
+          error: null,
+          characters: action.characters
+      })
+    }
+    else if (action.type === SEARCH_CHARACTERS_ERROR) {
+        return Object.assign({}, state, {
+          loading: false,
+          error: action.error,
+          //characters: []
+      })
+    }
+    return state;
+}
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@

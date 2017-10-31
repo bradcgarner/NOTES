@@ -1,0 +1,116 @@
+M O N G O
+
+~~~~~~~~~~ INSTALL ~~~~~~~~~
+brew services start mongodb
+
+sudo mkdir -p /data/db // create the default database directory 
+sudo chown $USER /data/db //  give your user permission to access default db directory
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+mongod // short for mongo daemon to start mongo db hosting
+mongod --log(s?) // optional
+CTRL + C // end mongo db hosting (host in 1 terminal, then work in another)
+
+mongo --version
+
+mongo // enter mongo terminal session
+quit() // exit mongo terminal session
+
+// import locally
+mongoimport --db tempTestDb --collection restaurants --drop --file ~/<path-to-unzipped-data-file>
+mongoimport --db [dbname] --collection [collection] --drop --file // --drop says drop the existing collection with the same name if any exists
+
+ulimit -n 2048 // server stopped, outside mongo, in terminal, do this to stop 256 limit error
+
+~ ~ ~ ~ ~ ~ ~ ~ MLAB ~ ~ ~ ~ ~ ~ ~ ~ 
+
+// create db in mLab & get url from mLab...
+
+mongo ds141514.mlab.com:41514/firsttestdb1 -u 'bradgarner' -p '7896321' // run from bash (OUTSIDE mongo shell)
+// line above opens a mongo shell; do after creating mLab account; do this to use local terminal for remote mLab
+
+// import db into mLab (OUTSIDE mongo shell)
+mongoimport --db [mlabDbname] --collection [collection] --drop --file ~/[filepath&name] --host [hostFromMlab].mlab.com --port [portFromMlab]  -u <username> -p <password>
+// username & password NOT in quotes
+
+// what giri did
+mongo mongod://...rest of uri from mongo
+
+~ ~ ~ ~ ~ ~ ~ ~ INSIDE MONGO SHELL ~ ~ ~ ~ ~ ~ ~ ~ 
+
+....... non-JS-style commands ........
+show dbs // show databases
+show collections // show 'tables'
+
+use [dbname] // make [dbname] current
+db // show current db
+
+....... JS-style commands ........
+db.dropDatabase() // delete a database.
+db.getCollectionNames() // view the names of collections in database
+db.[collection].findOne()
+
+db.people.find();
+db.people.find({});
+
+Need to understand the id return, id: 0, id 1, unspecified
+db.people.update({ // updates fields in record
+	_id:joeId
+	},
+	{
+		$set: {
+		job: "job",
+		specialty: "specialty"
+	}
+});
+db.people.update({ // replaces entire record
+	_id:joeId
+	},
+	{
+		job: "job",
+		specialty: "specialty"
+	}
+});
+
+db.inventory.find( { "size.uom": "in" } ) // exact match of only this one property
+vs
+db.inventory.find(  { size: { w: 21, h: 14, uom: "cm" } }  ) // exact match  of ENTIRE object including field order
+
+db.getCollection('restaurants').find({
+	"grades.grade" : {$eq: "B"} // find if any grade is a "B"
+}).count();
+
+db.getCollection('restaurants').find({
+	"grades.grade" : {$ne: "B"} // no grades are a "B"
+});
+
+db.getCollection('restaurants').find({
+	"grades.grade" : "B"  // same as 1st?  Or not?
+}).count();
+
+.pretty()
+
+$set, $push, $pop (w/ -1 vs unshift), $pull, $eq, $ne, $lt(e), $gt(e), , $slice, $each, $addToSet,  
+
+.find( {params} , {fieldname1: 1, fieldname2: 1} )
+
+.find( {"gpa": { "$gte" : 3.0, "$lte": 3.5 }) // find gpas between 3.0 & 3.5
+.find( {"sex" : {"$ne" : "M"}})
+.find( {"gpa" : {"$in" : [3.4, 3.5, 3.6]}}) // reverse is $nin
+.find( {"$or" : [
+	{"status": "dropout"}, {"gpa": {"$lt": "2.0"}}
+	]})
+.find( {"gpa": {"$not": {"$gt" : 3.0 }}})
+.find( {"tests": {"$all": [0,10]}}) // find where tests === 0 and 10 (tests is an array, i.e. one student got a 10 and a 0)
+.find( {"tests.0": 10}) // 10 on the 1st in the array tests
+
+
+~~~~~~~~~~~ MORE TERMINAL ~~~~~~~~~~~
+
+let selectDb = function (port, dbName) {
+	if (!port){ port = 27017; }
+	if (!dbName) { dbName = "test1"; }
+	db = connect('localhost:' + port + "/" + dbName );
+	return db;
+};

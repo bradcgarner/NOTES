@@ -1,0 +1,31 @@
+N O D E
+
+npm install -g http-server
+npm install package@123 --save // install a specific version of npm (versus the latest)
+
+// do this for each project
+// start in folder where your app is
+npm init // initialize (you'll be prompted)
+npm init -y // initialize and accept all defaults
+
+http-server -p 8080 // run from folder where you want to host
+
+
+node --inspect server.js // run server.js in debug mode
+
+node // start a node repl
+
+node <file.js> // file to run in the console
+nodemon <file.js>
+nodemon --delay 1 <file.js>
+
+CTRL+C // end server
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+E X P R E S S
+
+// start in your app folder
+npm install express --save // do this per project
+
+in express res.status().json() ... NOT res.json().status()

@@ -1,0 +1,5 @@
+S A S S
+
+sudo gem install -n /usr/local/bin sass
+echo $PATH
+export PATH=$PATH:/usr/local/bin/sass

@@ -1,0 +1,59 @@
+actions.js
+  no imports needed / no React magic, just JS
+  export actionNames (strings)
+  export actionObjects (instructions, with type: property)
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+reducer
+  no React magic, just JS
+  import * as actions from './actions';
+    (imports all exports from actions as property to action)
+    (or name them if not too many)
+
+  const initialState = { }
+
+  export const nameOfYourReducer (state = initialState, action) => {
+    ...many else if statements...
+  }
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+store
+  import { createStore } from 'redux'; // react magic
+  import { nameOfYourReducer } from './reducers';
+  export default createStore( nameOfYourReducer );
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+index
+  import React from 'react';
+  import ReactDOM from 'react-dom';
+  import NameOfComponent from './components/name-of-component';
+  import {Provider} from 'react-redux'; // library that links
+
+  import store from './store';
+  import './index.css';
+
+  ReactDOM.render(
+    <Provider store={store}> // react-redux magic that makes store available to entire tree!
+      <NameOfComponent />
+    </Provider>,
+      document.getElementById('root')
+  );
+
+component
+  import React from 'react';
+  import {connect} from 'react-redux';
+
+  export function NameOfComponent(props) {
+    return ()
+  }
+
+  const mapStateToProps = state => ({ // don't need to pass in props, since we are already in the component
+    componentProp1: state.matchingProp,
+    componentProp2: youCanUseACalculationHere...
+    // you can inject any prop you want here!
+  });
+
+  export default connect( mapStateToProps )( NameOfComponent );
