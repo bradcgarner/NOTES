@@ -1,6 +1,10 @@
 Full Stack Node / React
 Separate Repos
-Database not currently addressed
+Not currently addressed:
+  Database 
+  Testing / Travis
+  React testing
+
 
 @@@@@@@@@@@@@  Set up the Server   @@@@@@@@@@@@@
 
@@ -34,6 +38,7 @@ If you'll have multiple component files, create a 'components' folder under 'src
 Same for Redux actions and reducers.
 Set up .env with `REACT_APP_BASE_URL`.  NOTE: the `REACT-APP` part is required.
 Also drop this note for later in your .env: PREFIX_FOR_HEROKU="https://cors-anywhere.herokuapp.com/"
+Don't forget the favicon!
 Save in a new repo on Github.
 
 @@@@@@@@@@  Establish Communication   @@@@@@@@@@
