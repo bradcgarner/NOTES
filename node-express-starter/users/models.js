@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
 
-// NOTE: keep this 1 level deep. If your schema nests levels, list the top 
+// NOTE: keep this 1 level deep. If your schema nests levels, list the top data type, and insert sub-levels as other mongo schema 
 const UserSchema = mongoose.Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },

@@ -14,8 +14,7 @@ const {DATABASE_URL, PORT, CLIENT_ORIGIN} = require('./config');
 
 const app = express();
 
-const { router: router1 } = require('./router1'); // <<<<< RE-NAME !!!!!
-const { router: router2 } = require('./router2');
+const { router: userRouter } = require('./users');
 
 const { router: authRouter, basicStrategy, jwtStrategy } = require('./auth');
 const passport = require('passport');
@@ -45,13 +44,13 @@ app.use((req,res,next)=>{
   next();
 });
 
+// option below is to serve up html from the server, vs client
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html');
 });
 
-app.use('/endpoint1', router1);
-app.use('/endpoint2', router2);
-app.use('/api/auth/', authRouter);
+app.use('/api/users', userRouter);
+app.use('/api/auth/', authRouter);app.use('/api/auth/', authRouter);
 app.use('*', (req, res) => {
   return res.status(404).json({ message: 'Not Found' });
 });
@@ -69,12 +68,12 @@ function dbConnect(url = DATABASE_URL) {
 }
 
 // POSTGRES !!!!!
-function dbConnect(url = DATABASE_URL) {
-  knex = createKnex({
-    client: 'pg',
-    connection: url
-  });
-}
+// function dbConnect(url = DATABASE_URL) {
+//   knex = createKnex({
+//     client: 'pg',
+//     connection: url
+//   });
+// }
 
 function runServer(port=PORT) {
   return new Promise((resolve, reject) => {
@@ -109,9 +108,9 @@ function closeServer() {
 }
 
 // POSTGRES !!!!!
-function closeServer() {
-  return knex.destroy();
-}
+// function closeServer() {
+//   return knex.destroy();
+// }
 
 // if called directly, vs 'required as module'
 if (require.main === module) { // i.e. if server.js is called directly (so indirect calls, such as testing, don't run this)
