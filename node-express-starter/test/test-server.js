@@ -9,6 +9,13 @@ const {app, runServer, closeServer} = require('../server'); // if server.js incl
 
 chai.use(chaiHttp); // lets us make HTTP requests in our tests. https://github.com/chaijs/chai-http
 
+// Set NODE_ENV to `test` to disable http layer logs
+// You can do this in the command line, but this is cross-platform
+process.env.NODE_ENV = 'test';
+
+// Clear the console before each run
+process.stdout.write('\x1Bc\n');
+
 describe('describe this test', function() { // mocha has built-in promise handling in before, after, beforeEach, afterEach, and it
 
   before(function() { // before expects to return a promise. runSever() returns a promise, so we return that.
