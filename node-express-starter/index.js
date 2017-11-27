@@ -15,7 +15,6 @@ const {DATABASE_URL, PORT, CLIENT_ORIGIN} = require('./config');
 const app = express();
 
 const { router: userRouter } = require('./users');
-
 const { router: authRouter, basicStrategy, jwtStrategy } = require('./auth');
 const passport = require('passport');
 passport.use(basicStrategy);
@@ -27,15 +26,13 @@ app.use(
   })
 );
 
-app.use(express.static('public'));
-
 app.use(
   cors({
     origin: CLIENT_ORIGIN
   })
 );
 
-// to prevent CORS issues, particularly with React and Heroku
+// to prevent CORS issues, particularly with React and Heroku. Might be able to delete with Netlify. Look into security issues.
 app.use((req,res,next)=>{
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'POST, PUT');
@@ -45,6 +42,7 @@ app.use((req,res,next)=>{
 });
 
 // option below is to serve up html from the server, vs client
+app.use(express.static('public'));
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html');
 });
@@ -87,7 +85,6 @@ function runServer(port=PORT) {
         reject(err);
       });
   });
-
 }
 
 // close the server, and return a promise. we'll handle the promise in integration tests.
