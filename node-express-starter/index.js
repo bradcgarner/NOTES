@@ -5,6 +5,8 @@ const morgan = require('morgan');
 const cors = require('cors');
 // mongoose only
 const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+
 // knex
 const createKnex = require('knex');
 
@@ -12,8 +14,13 @@ const {DATABASE_URL, PORT, CLIENT_ORIGIN} = require('./config');
 
 const app = express();
 
-const router1 = require('./router1'); // <<<<< RE-NAME !!!!!
-const router2 = require('./router2');
+const { router: router1 } = require('./router1'); // <<<<< RE-NAME !!!!!
+const { router: router2 } = require('./router2');
+
+const { router: authRouter, basicStrategy, jwtStrategy } = require('./auth');
+const passport = require('passport');
+passport.use(basicStrategy);
+passport.use(jwtStrategy);
 
 app.use(
   morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev', {
@@ -29,69 +36,76 @@ app.use(
   })
 );
 
+// to prevent CORS issues, particularly with React and Heroku
+app.use((req,res,next)=>{
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'POST, PUT');
+  res.header('Access-Control-Request-Headers');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html');
 });
 
 app.use('/endpoint1', router1);
 app.use('/endpoint2', router2);
+app.use('/api/auth/', authRouter);
+app.use('*', (req, res) => {
+  return res.status(404).json({ message: 'Not Found' });
+});
 
 let server; // declare `server` here, then runServer assigns a value.
 let knex = null;
 
-// connect to database, then start server
 // MONGO !!!!!
-function runServer(databaseUrl=DATABASE_URL, port=PORT) {
-  return new Promise((resolve, reject) => {
-    mongoose.connect(databaseUrl, err => { // only if mongoose
-      if (err) {
-        return reject(err);
-      }
-      server = app.listen(port, () => { // always
-        console.log(`Your app is listening on port ${port}`);
-        resolve();
-      }).on('error', err => {
-        mongoose.disconnect(); // only if mongoose
-        console.error('Express failed to start');
-        reject(err);
-      });
+function dbConnect(url = DATABASE_URL) {
+  return mongoose.connect(url, {useMongoClient: true})
+    .catch(err => {
+      console.error('Mongoose failed to connect');
+      console.error(err);
     });
-  });
 }
 
 // POSTGRES !!!!!
-function runServer(databaseUrl=DATABASE_URL, port=PORT) {
+function dbConnect(url = DATABASE_URL) {
   knex = createKnex({
     client: 'pg',
-    connection: databaseUrl
+    connection: url
   });
+}
+
+function runServer(port=PORT) {
   return new Promise((resolve, reject) => {
     server = app.listen(port, () => { // always
       console.log(`Your app is listening on port ${port}`);
       resolve();
-    }).on('error', err => {
-      closeServer();
-      console.error('Express failed to start');
-      reject(err);
-    });
-    
+    })
+      .on('error', err => {
+        mongoose.disconnect(); // only if mongoose
+        console.error('Express failed to start');
+        reject(err);
+      });
   });
+
 }
 
 // close the server, and return a promise. we'll handle the promise in integration tests.
 // MONGO !!!!!
 function closeServer() {
-  return mongoose.disconnect().then(() => { // mongoose only. why no error catch here?
-    return new Promise((resolve, reject) => {
-      console.log('Closing server');
-      server.close(err => {
-        if (err) {
-          return reject(err);
-        }
-        resolve();
+  return mongoose.disconnect()
+    .then(() => { // mongoose only. why no error catch here?
+      return new Promise((resolve, reject) => {
+        console.log('Closing server');
+        server.close(err => {
+          if (err) {
+            return reject(err);
+          }
+          resolve();
+        });
       });
     });
-  });
 }
 
 // POSTGRES !!!!!
@@ -99,7 +113,9 @@ function closeServer() {
   return knex.destroy();
 }
 
+// if called directly, vs 'required as module'
 if (require.main === module) { // i.e. if server.js is called directly (so indirect calls, such as testing, don't run this)
+  dbConnect();
   runServer().catch(err => console.error(err));
 }
 
