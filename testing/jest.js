@@ -15,6 +15,9 @@ const element = {};
 
 // ################## OBJECT TYPES ##################
 
+
+// ################## EQUALITY ##################
+
 expect(element).toBe(4); // exact equality
 expect(element).toBe('value'); 
 expect(element).toBe({a:1, b:2}); 
@@ -28,40 +31,42 @@ expect(element).toBeUndefined();  // exactly undefined, not other falsy values
 expect(element).toBeTruthy();     // normal, generic truthiness
 expect(element).toBeFalsy();      // normal, generic falsiness
 
-// ################## NUMBERS ##################
+// ################## PRIMITIVE VALUES - NUMBERS ##################
 
 expect(element).toBeGreaterThan(3);
 expect(element).toBeGreaterThanOrEqual(3);
 expect(element).toBeGreaterThan(3);
 expect(element).toBeLessThan(3);
 expect(element).toBeLessThanOrEqual(3);
-expect(element).toBe(3);    // toBe and toEqual are same for numbers
+expect(element).toBe(3);          // toBe and toEqual are same for numbers
 expect(element).toEqual(3);
 expect(0.1+0.2).toBeCloseTo(0.3); // avoid floating-point madness!!!
 
+// ################## PRIMITIVE VALUES - STRINGS ##################
 
-// ################## OBJECT PRIMITIVE VALUES ##################
-
-expect(element).toContain('highScore'); 
-
+const testString = 'just some words to test strings';
+expect(testString).not.toMatch(/just/);     // fail, the regex /just/ is contained in testString
+expect(testString).toMatch(/just/);         // pass
 
 
 // ################## OBJECT KEYS / PROPERTIES ##################
-expect(element).toHaveState({clicks: 1});
+
 
 // ################## OBJECT VALUES ##################
-expect(element).toEqual({a: 1}); // Same as deep.equal in chai
 
 
 
 // ################## ARRAY VALUES ##################
 
+expect(element).toContain('beer');  // true in case of element = ['beer','wine','other random booze']
 
+// ################## EXCEPTIONS ##################
 
-
-
-
-
-
+const someFunction = () => {
+  throw new ConfigError('WTF?!');
+};
+expect(someFunction).toThrow();            // pass, it throws
+expect(someFunction).toThrow(ConfigError); // pass, it throws ConfigError
+expect(someFunction).toThrow('WFT?!');     // pass, it throws this specific message
 
 

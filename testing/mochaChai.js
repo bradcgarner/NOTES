@@ -22,7 +22,7 @@ expect([]).to.be.an('array').that.is.empty;
 expect(1).to.be.a('string', 'nooo why fail??'); // the 'a' assertion allows a 2nd message parameter
 expect(1, 'nooo why fail??').to.be.a('string'); // 2nd message parameter in 'expect'
 
-// ################## OBJECT PRIMITIVE VALUES ##################
+// ################## PRIMITIVE VALUES ##################
 
 expect({a: 1, b: 2, c: 3}).to.include({a: 1, b: 2}); // When the target is an object, .include asserts that the given object val’s properties are a subset of the target’s properties.
 

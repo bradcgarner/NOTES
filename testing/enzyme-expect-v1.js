@@ -19,14 +19,16 @@ expect(element).toBeA('video');
 
 // ################## OBJECT PRIMITIVE VALUES ##################
 
-expect(element).toContain('highScore'); 
 
 
 
 // ################## OBJECT KEYS / PROPERTIES ##################
+
+expect(element).toContain('highScore'); 
 expect(element).toHaveState({clicks: 1});
 
 // ################## OBJECT VALUES ##################
+
 expect(element).toEqual({a: 1}); // Same as deep.equal in chai
 
 
