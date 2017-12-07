@@ -1,27 +1,71 @@
 P O S T G R E S Q L
 
-pg_ctl status
-pg_ctl start -l [dbname]
+to install:
+brew install postgres
 
-psql -U <role> [dname] // to enter terminal command prompt for this database (type SQL)
+to run locally:
+make sure $PGDATA is set; this is where pg runs locally
+$ echo $PGDATA to find it (usually something like /usr/local/var/postgres)
 
-createdb [connection-option] [option] [dbname] [description]
-createdb -U dev [dbname] // option sets the user who runs the command as the owner
-pg_dump // backs up
-psql // restores dump file
-psql -U dev -f ~/[path to back up] [dbname]
+to save your $PGDATA env var to your bash profile, type:
+$ echo "export PGDATA=/usr/local/var/postgres" >> ~/.bash_profile
 
-pgsql [dbname] < ~/[filename to import]
-pgsql -U dev -d [dbname] < ~/[filename to import]
-dropdb [dbname]
-psql -h [hostname] -U [username] [dbname]
 
-\q //quit
-\c // connect to other
-\l // list
-\dt+ // list public tables with size & description columns
-\dt // list public tables
-\d list all tables in current database
+
+to start the server type
+$ pg_ctl start -l $PGDATA/server.log
+
+(you can skip the part after -l, but then the server will log to the current terminal window, and you'll need to enter commands in a separate window)
+
+(with the server running)...
+to create a user, and allow password
+$ createuser -Pw --interactive
+when it asks username, you can type your owner
+  (to find your username)
+  $ whoami
+or enter a username; if you create a user, say "dev" it stays in the environment, so you don't need to create it again.
+say yes to superuser to create an admin
+
+$ pg_ctl stop
+$ pg_ctl status
+$ pg_ctl start -l [dbname]
+
+to enter terminal command prompt for this database (type SQL)
+$ psql -U <role> [dname]
+
+$ createdb [connection-option] [option] [dbname] [description]
+$ createdb -U dev [dbname] // option sets the user who runs the command as the owner
+$ dropdb [dbname]
+
+$ psql [dbname] < ~/[filename to import]
+$ psql -h [hostname] -U [username] [dbname]
+
+back up
+$ pg_dump
+restore dump file
+$ psql
+
+-f is to run file, right???
+$ psql -U dev -d [dbname] < ~/[filename]
+$ psql -h hostname -u user database < path/to/test.sql
+
+indide psql shell
+# select * from users; (write SQL... MUST use ;) (note: lowercase)
+quit psql shell
+# \q
+list all databases
+# \l
+connect to a database
+# \c [dbname]
+list public tables with size & description columns
+# \dt+
+list public tables
+# \dt
+list all tables in current database
+# \d
+show detail about a table
+# \d [tableName]
+
 
 mydb=# super=user
 mydb  ?

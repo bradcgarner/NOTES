@@ -6,7 +6,7 @@
  * If you'd like to help improve this, let me know, and I can add you as a collaborator.
  */
 
-'use strict'; // included so my linter doesn't go crazy
+'use strict'; // ...so my linter doesn't bark at me
 /* global expect */
 
 // ################## OBJECT TYPES ##################
