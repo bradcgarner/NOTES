@@ -14,6 +14,8 @@ const anotherElement = {};
 // save test files as *.test.js
 // no imports needed if inside a React app
 
+// EXAMPLES: https://github.com/facebook/jest/tree/master/examples
+
 /* PREGUNTAS!
 
 create-react-app installs the following (see package.json)
@@ -22,6 +24,7 @@ create-react-app installs the following (see package.json)
   jest
 enzyme
   testing utility
+  (there are other options, but why use them?)
   https://github.com/airbnb/enzyme
   you can use it with a range of assertion libraries
   we'll use it with jest, since that is native
@@ -40,8 +43,10 @@ enzyme
       ^^^^ This is not default. And... Don't do it. ^^^^^
 
 jest
-  E.g. 'describe' function, and 'it' (or 'test') function are native enzyme functions.
-  E.g. 'expect()' function, and '.toEqual()' curried function(?) are native jest assertions.
+  Note: Jest can be used outside React 
+
+  E.g. 'describe' function, and 'it' (or 'test') function, 
+       'expect()' function, and '.toEqual()' curried function(?) are native jest assertions.
     
     describe('reducer', () => {
 
@@ -56,17 +61,14 @@ jest
     http://npmjs.com/package/expect-enzyme/
     ^^^^^^ IGNORE!  DEPRECATED! ^^^^^
 
+MORE RESEARCH VVVVVVV
+what does setupTests.js do ????
 
-JSON.stringify() for complex object comparison
-  what does setupTests.js do ????
-
-ConfigError
-
-Async basics
 */
  
 // ################## OBJECT TYPES ##################
 
+expect(typeof element).toBe('string');  // by Brad, no example found
 
 // ################## EQUALITY ##################
 
@@ -84,6 +86,7 @@ expect(element).toBeDefined();    // opposite of undefined
 expect(element).toBeUndefined();  // exactly undefined, not other falsy values
 expect(element).toBeTruthy();     // normal, generic truthiness
 expect(element).toBeFalsy();      // normal, generic falsiness
+// see mock functions for expect.anything()
 
 // ################## PRIMITIVE VALUES - NUMBERS ##################
 
@@ -105,9 +108,12 @@ expect(testString).toMatch(/just/);         // pass
 
 // ################## OBJECT KEYS / PROPERTIES ##################
 
+expect(element.propName).toBeDefined();    // by Brad, no example found; this would be same as expect(element).to.have.property('propName') 
 
 // ################## OBJECT VALUES ##################
 
+// treat same as primitive value
+expect(element.someKey).toBe(3);          // by Brad, no example found; toBe and toEqual are same for numbers
 
 
 // ################## ARRAY VALUES ##################
@@ -124,6 +130,7 @@ expect(someFunction).toThrow(ConfigError); // pass, it throws ConfigError
 expect(someFunction).toThrow('WFT?!');     // pass, it throws this specific message
 
 // ################## ASYNC CALLBACKS - NOT PROMISES ##################
+
 const fetchData = () => { return 'some async function';};
 
 // the argument done basically says wait until I am called (like .then on a promise, or .await) before moving on
@@ -141,7 +148,7 @@ test('the data is peanut butter', done => {
 
 // use standard promise format for promises, .then, not done()
 test('the data is peanut butter', () => {
-  expect.assertions(1);
+  expect.assertions(1);  // 1 is the # of assertions before it ends
   return fetchData()
     .then(data => {
       expect(data).toBe('peanut butter');
@@ -220,4 +227,77 @@ describe('matching cities to foods', () => {
   });
 
 });
+
+// it.only and it.skip are same as Mocha/Chai
+
+// ################## MOCK FUNCTIONS ##################
+
+const mockCallback = jest.fn();
+forEach([0, 1], mockCallback);
+
+expect(mockCallback.mock.calls.length).toBe(2); // The mock function is called twice
+expect(mockCallback.mock.calls[0][0]).toBe(0);  // The first argument of the first call to the function was 0
+expect(mockCallback.mock.calls[1][0]).toBe(1);  // The first argument of the second call to the function was 1
+
+// More on mock calls here... not including for now... http://facebook.github.io/jest/docs/en/mock-functions.html#content
+
+const myMock = jest.fn();
+console.log(myMock()); // undefined
+
+myMock
+.mockReturnValueOnce(10)
+.mockReturnValueOnce('x')
+.mockReturnValue('y'); // repeats as many times as it is called
+
+console.log(myMock(), myMock(), myMock(), myMock(), myMock()); // 10, x, y, y, y
+
+// ~~~~~~~~
+myMock.mockReturnValueOnce(true).mockReturnValueOnce(false); // Make mock return `true` on 1st call, and `false` on 2nd
+
+const result = [11, 12].filter(myMock);
+
+console.log('result',result); // []
+console.log(myMock.mock.calls); // [ [ 11, 0, [ 11, 12 ] ], [ 12, 1, [ 11, 12 ] ] ]
+
+// ~~~~~~~~
+
+const myMockFn = jest.fn(cb => cb(null, true));
+
+myMockFn((err, val) => console.log(val)); // true
+
+// ~~~~~~~~
+
+test('map calls its argument with a non-null argument', () => {
+  const mock = jest.fn();
+  [1].map(x => mock(x));
+  expect(mock).toBeCalledWith(expect.anything());
+});
+
+// much more on mock functions at http://facebook.github.io/jest/docs/en/mock-functions.html#mock-implementations
+
+// ################## DIY MATCHERS!!!! ##################
+
+expect.extend({
+  toBeDivisibleBy(received, argument) {
+    const pass = received % argument == 0;
+    if (pass) {
+      return {
+        message: () => `expected ${received} not to be divisible by ${argument}`,
+        pass: true,
+      };
+    } else {
+      return {
+        message: () => `expected ${received} to be divisible by ${argument}`,
+        pass: false,
+      };
+    }
+  },
+});
+
+test('even and odd numbers', () => {
+  expect(100).toBeDivisibleBy(2);
+  expect(101).not.toBeDivisibleBy(2);
+});
+
+// much more on make your own matchers at http://facebook.github.io/jest/docs/en/expect.html#reference
 
