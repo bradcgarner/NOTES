@@ -43,6 +43,7 @@ app.use((req,res,next)=>{
 
 // option below is to serve up html from the server, vs client
 app.use(express.static('public'));
+// line below is explicit, but shouldn't be needed
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html');
 });
