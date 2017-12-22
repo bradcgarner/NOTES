@@ -64,4 +64,10 @@ Create a production build of the client: `REACT_APP_BASE_URL="https://MY-APP-NAM
 
 Create a Netlify app: `netlify create` (Enter `npm install netlify-cli -g` first, if needed.)
 
-Deploy your app: `netlify deploy -p ./build -t <YOUR_ACCESS_TOKEN> -s <YOUR_SITE_ID>`, where `<YOUR_ACCESS_TOKEN>` comes from typing `cat ~/.netlify/config` into the terminal, and `<YOUR_SITE_ID>` comes from the `.netlify` file. Optional tip: You can save this in your `.env` file in case you need it later.  NOTE: To update your Netlify after deploying, commit changes, then enter `npm run build`, then repeat the `netifly deploy...` command above.
+Deploy your app: `netlify deploy -p ./build -t <YOUR_ACCESS_TOKEN> -s <YOUR_SITE_ID>`, where `<YOUR_ACCESS_TOKEN>` comes from typing `cat ~/.netlify/config` into the terminal, and `<YOUR_SITE_ID>` comes from the `.netlify` file. Optional tip: You can save this in your `.env` file in case you need it later.  
+
+NOTE: To update your Netlify after deploying, 
+1) make sure your REACT_APP_BASE_URL .env is set to the remote site (heroku or other)
+2) commit changes, 
+3) enter `npm run build`, 
+4) then repeat the `netifly deploy...` command above.
