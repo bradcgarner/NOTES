@@ -66,6 +66,8 @@ Create a Netlify app: `netlify create` (Enter `npm install netlify-cli -g` first
 
 Deploy your app: `netlify deploy -p ./build -t <YOUR_ACCESS_TOKEN> -s <YOUR_SITE_ID>`, where `<YOUR_ACCESS_TOKEN>` comes from typing `cat ~/.netlify/config` into the terminal, and `<YOUR_SITE_ID>` comes from the `.netlify` file. Optional tip: You can save this in your `.env` file in case you need it later.  
 
+Be sure to give the Netlify permalink to the back end as a .env variable.
+
 NOTE: To update your Netlify after deploying, 
 1) make sure your REACT_APP_BASE_URL .env is set to the remote site (heroku or other)
 2) commit changes, 
