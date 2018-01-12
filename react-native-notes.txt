@@ -1,0 +1,13 @@
+Contrast with
+  PhonGap
+  Ionic
+  Cordova
+  
+Tools for native app feel
+All styling is done via flexbox (yay!)
+Allows access to native device apps and features such as
+  camera
+  geolocation
+  vibration
+Allows push notifications
+Accessing some native device features requires 'exiting' React Native and writing in Swift/Objective C or Java
