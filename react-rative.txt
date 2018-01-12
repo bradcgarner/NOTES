@@ -1,0 +1,53 @@
+SET UP REACT NATIVE ENVIRONMENT
+brew install yarn
+
+PATH="$PATH: `yarn global bin`"
+
+yarn global add create-react-native-ap
+
+did NOT do this...
+source ~/.bashrc
+
+create-react-native-app myreactproj
+
+	warnings of unmet dependencies, but got success message
+	message included commands:
+		yarn start
+		yarn run ios
+		yarn run android
+		yarn test
+		yarn run eject
+		
+yarn run
+	message	
+	unable to start server
+	see https://git.io/v5vcn for more information, either install watchman or run the following snippet:
+		sudo sysctl -w kern.maxfiles=5242880
+		sudo sysctl -w kern.maxfilesperproc=524288
+	ran that and was prompted for password
+	
+yarn run
+	got QR code
+	phone and computer are on same wifi, but Expo phone won't open
+	scan QR code gives message:
+		there was a problem loading he experience. It looks like you may be using a LAN url. make sure your device is on the same network as the server or try using a tunnel.
+	tried manually typing into Expo:
+		exp://192.168.1.159:19000
+		http://...
+		192. ...
+	tried http://192... on phone as well...
+
+yarn run ios
+	can't determine id of Simulator app; the Simulator is most likely not installed on this machine...
+	
+yarn add xcode
+	successfully installed
+
+install Xcode from app store on macbook
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+ react-native init name
+ 
+ didn't show ios folder and android folder (like video does)
+ 
+ react-native-router-flux
