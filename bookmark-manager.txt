@@ -1,0 +1,8 @@
+Idea for bookmark manager
+
+drop in bookmark url
+  find easy ways to do this
+
+org/search    categories[]  edit list
+search        keywords[]    edit list
+
