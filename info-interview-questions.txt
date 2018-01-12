@@ -1,0 +1,51 @@
+How did you start your career?
+  Backstory
+  Education
+  First job search
+  Etc.
+
+How long have you been in web development?
+
+What attributes do you look for when hiring junior developers?
+
+@@@@@@@@@@@@@@@@@@@@@@@ Feedback and Advice Received @@@@@@@@@@@@@@@@@@@@@@@@@@
+
+Highlight my unique background
+  Stormwater
+  Earth sciences
+  Business management / business process
+  Long history of seeing a challenge and trying to tackle it, which was mostly outside of my primary role
+
+Emphasize the quality of my new work (web development)
+  Don't let my backstory / prior successes overshadow
+  
+Don't forget to read the audience
+  If not able to research the audience in advance, include a little exploratory research early in the conversation
+
+These two can be contradictory; balance them:
+  Don't just say 'what' you did, say why you did it
+    Show passion about your projects
+    E.g. stormwater project, past experience, why it matters, what is unique
+  Get to the point faster
+    Explaining the 'why' and story can seem like avoiding discussion of technology used
+    Discuss key technologies used and basic sequence/process for building with those technologies
+
+What people look for:
+  Personality
+  Communication
+  Ability to learn
+  Breadth of knowledge / flexibility in learning
+  Teamwork skills
+  
+What no-one expects
+  Perfect portfolio
+  Exact skills match
+  Perfect command of each and every technology
+  
+Buzzwords that I tend to forget to use (even though they are implied)
+  Communication
+  Teamwork
+  
+Some things I should remember to include
+  User feedback
+  
