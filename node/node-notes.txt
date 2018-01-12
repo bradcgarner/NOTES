@@ -1,1 +1,63 @@
-x
+
+Express - only http protocol: request/response
+  Http is a connectionless environment
+  Client always initiates communication
+
+Socket.io (or websocket or ws)
+  Upgrades http connection to a websocket connection
+  Connects as http, then upgrades as part of handshake
+
+Websockets:
+  Either client or server can initiate communication
+  Either can end a session
+  Don't even think about as 'client' and 'server' but as 2 devices
+  Allows 2-way communication
+  Server is aware of client 
+    Questions: How aware? Security?
+  Examples:
+    Chat
+    Stock price monitoring
+    iot
+      What are logistics of iot connections?
+      Initial registration with the server?
+      Then server has the device on a list, and contacts those on its list?
+  Bandwith:
+    websockets have no impact on bandwidth vs http; content affects bandwidth usage
+  Streaming:
+    Streaming is NOT a websocket. Streaming is something else entirely.
+  
+Websockets same level as http???
+  Have heard same level. Have read 1 level higher.
+  Both are built on top of TCP
+
+How is websocket connection made?
+  Logistically... is that an endpoint? Or typically via an IP address?
+  Endpoints are essentially decorated IP addresses
+
+Node is single-threaded
+  Think of thread as a pipe
+  There is a single thread (pipe) that processes all client communications
+  Think of client communications as a single-file line
+  Versus multi-threaded servers that create a new thread for each client connection
+  Advantages are that single-threaded servers are highly scalable. Not relying on hardware to scale up for more connections; relying on efficient management of server (see below)
+  Server management:
+    Single-threaded does not mean single process
+    There can (and will be) processes outside of the thread
+    E.g. database connection (async action)
+    Single thread will delegate db work to another process, and continue to process other client actions in the thread
+      I need to diagram how this works...
+    You want the thread to only include non-blocking actions
+    Blocking means it takes a while, and slows down (potentially blocks) the flow of other client requests
+      delegate async and computationally heavy requests to other processes so that they do not block
+  Single-threaded is ideal for:
+    High-volume / low computational complexity / need for fast response
+    Think of examples: chat, iot, stock prices
+      All are low complexity, high volume, and need to be highly responsive (real-time)
+    Mongo or other noSQL db are ideal for Node because they don't require managing SQL data (converting join tables into JSON, etc.)
+      Just get the object, which is already formatted, and send; little computation required.
+
+Ports for web
+  80, 443
+  No different for websocket
+  Not sure what I read about Node handling websockets on 'standard' vs 'nonstandard' ports, since the connection is made via http over standard ports, then upgraded; no jumping to another port...
+  
