@@ -57,7 +57,7 @@ Type `git push heroku master`.
 NOTE: To update Heroku after deploying, commit changes, then enter `git push heroku master`.
 
 Replicate all your .env variables on Heroku for the server and client.
-In the client repo, prefix REACT_APP_BASE_URL with "https://cors-anywhere.herokuapp.com/"
+If deploying client and server to Heroku, in the client repo, prefix REACT_APP_BASE_URL with "https://cors-anywhere.herokuapp.com/"
 
 @@@@@@@@@@@@@@@  Netlify Option   @@@@@@@@@@@@@@
 Create a production build of the client: `REACT_APP_BASE_URL="https://MY-APP-NAME.herokuapp.com/api" npm run build`.  NOTE: refer to [React documentation](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#adding-custom-environment-variables) if you choose a URL name different from `REACT_APP_BASE_URL`.
