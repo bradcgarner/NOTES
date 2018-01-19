@@ -36,7 +36,7 @@ Make sure .gitignore ignores .env (should come with create-react-app).
 For Redux: `npm install --save redux react-redux redux-thunk`
 If you'll have multiple component files, create a 'components' folder under 'src'.
 Same for Redux actions and reducers.
-Set up .env with `REACT_APP_BASE_URL`.  NOTE: the `REACT-APP` part is required.
+Set up .env with `REACT_APP_BASE_URL`.  NOTE: the `REACT_APP` part is required.
 Also drop this note for later in your .env: PREFIX_FOR_HEROKU="https://cors-anywhere.herokuapp.com/"
 Don't forget the favicon!
 Save in a new repo on Github.
@@ -49,27 +49,28 @@ Confirm endpoint via Postman.
 Create a React component that pings the endpoint and displays the response.
 Confirm success.
 
-@@@@@@@@@@@@@@  Deploy Remotely   @@@@@@@@@@@@@@
- 
+@@@@@@@@@@@@@@  Deploy Server   @@@@@@@@@@@@@@
 For both server and client:
 Type `heroku create <APP-NAME>` (re-try if name taken)
 Type `git push heroku master`.
 NOTE: To update Heroku after deploying, commit changes, then enter `git push heroku master`.
 
-Replicate all your .env variables on Heroku for the server and client.
-If deploying client and server to Heroku, in the client repo, prefix REACT_APP_BASE_URL with "https://cors-anywhere.herokuapp.com/"
+Replicate all your .env variables on Heroku.
 
-@@@@@@@@@@@@@@@  Netlify Option   @@@@@@@@@@@@@@
-Create a production build of the client: `REACT_APP_BASE_URL="https://MY-APP-NAME.herokuapp.com/api" npm run build`.  NOTE: refer to [React documentation](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#adding-custom-environment-variables) if you choose a URL name different from `REACT_APP_BASE_URL`.
+@@@@@@@@@@@@@@@  Deploy Client   @@@@@@@@@@@@@@
+Create a production build of the client: `REACT_APP_BASE_URL="https://MY-APP-NAME.herokuapp.com" npm run build`.
+
+NOTE: refer to [React documentation](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#adding-custom-environment-variables) if you choose a URL name different from `REACT_APP_BASE_URL`.
 
 Create a Netlify app: `netlify create` (Enter `npm install netlify-cli -g` first, if needed.)
 
-Deploy your app: `netlify deploy -p ./build -t <YOUR_ACCESS_TOKEN> -s <YOUR_SITE_ID>`, where `<YOUR_ACCESS_TOKEN>` comes from typing `cat ~/.netlify/config` into the terminal, and `<YOUR_SITE_ID>` comes from the `.netlify` file. Optional tip: You can save this in your `.env` file in case you need it later.  
+Deploy your app: `netlify deploy -p ./build -t <YOUR_ACCESS_TOKEN> -s <YOUR_SITE_ID>`, where `<YOUR_ACCESS_TOKEN>` comes from typing `cat ~/.netlify/config` into the terminal, and `<YOUR_SITE_ID>` comes from the `.netlify` file.
+Optional tip: You can save this in your `.env` file. You will need this every time you deploy.  
 
-Be sure to give the Netlify permalink to the back end as a .env variable.
+Netlify will allow you to deploy to either http or https.  Choose https and be consistent.  Make sure the environment variable in Heroku for the server matches the full url of where you deployed (e.g. don't put http in Heroku and deploy to https).
 
 NOTE: To update your Netlify after deploying, 
-1) make sure your REACT_APP_BASE_URL .env is set to the remote site (heroku or other)
+1) make sure your REACT_APP_BASE_URL .env is set to the remote site (heroku)
 2) commit changes, 
-3) enter `npm run build`, 
+3) re-run `REACT_APP_BASE_URL="https://MY-APP-NAME.herokuapp.com" npm run build`
 4) then repeat the `netifly deploy...` command above.
