@@ -18,6 +18,10 @@ E.g.
 $ psql test-data <aslkflkjs.aslkfjsaldkfjsalkj.sql
 This imports a the file from ElephantSql into test-data.
 
+Then start the server
+$ pg_ctl start -l $PGDATA/server.log
+from -l forward is so that we log outside the terminal
+
 $ psql -U [role]
 E.g.
 $ psql -U dev
