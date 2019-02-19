@@ -1,5 +1,38 @@
 P O S T G R E S Q L
 
+@@@@@@@@@@@@@@@@
+
+shortcut refresher:
+export database from ElephantSql
+should be a .lzo file
+$ brew install lzop
+$ lzop -d <filename> (decompresses .lzo file)
+should have a .sql file now
+
+$ createdb -U [role] [database name]
+E.g.
+$ createdb -U dev test-data
+This creates a database called test-data
+$ psql [dbname] <[filename]
+E.g.
+$ psql test-data <aslkflkjs.aslkfjsaldkfjsalkj.sql
+This imports a the file from ElephantSql into test-data.
+
+$ psql -U [role]
+E.g.
+$ psql -U dev
+enter postgres shell
+
+#dev
+# \c [dbname]
+E.g.
+# \c test-data
+Connect to the test-data database
+
+...now just enter SQL commands...
+
+@@@@@@@@@@@@@@@@
+
 to install:
 brew install postgres
 
@@ -9,8 +42,6 @@ $ echo $PGDATA to find it (usually something like /usr/local/var/postgres)
 
 to save your $PGDATA env var to your bash profile, type:
 $ echo "export PGDATA=/usr/local/var/postgres" >> ~/.bash_profile
-
-
 
 to start the server type
 $ pg_ctl start -l $PGDATA/server.log
